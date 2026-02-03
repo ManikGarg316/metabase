@@ -314,6 +314,23 @@
                   (is (nil? (get-in no-desc-dash [:collection :description])))
                   (is (= "No Description" (get-in no-desc-dash [:collection :name]))))))))))))
 
+(deftest remove-unreadable-transforms-test
+  (mt/with-premium-features #{:transforms}
+    (testing "search results filter out transforms the user cannot read"
+      (mt/with-temp [:model/Database {db-id :id} {}
+                     :model/Transform {transform-id :id}
+                     {:name   "Test Transform (xq9k2m#z)"
+                      :source {:type  "query"
+                               :query {:database db-id
+                                       :type     "native"
+                                       :native   {:query "SELECT 1"}}}}]
+        (search.tu/with-temp-index-table
+          (testing "when user has access, transform is included in results"
+            (mt/with-test-user :crowberto
+              (let [results (search/search {:term-queries ["xq9k2m#z"] :entity-types ["transform"]})
+                    transform-result (u/seek #(= transform-id (:id %)) results)]
+                (is (some? transform-result) "Transform should be in search results")))))))))
+
 (deftest weight-override-test
   (testing "weights can be overridden on a per-tool-call basis"
     (mt/with-test-user :crowberto
