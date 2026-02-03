@@ -747,9 +747,14 @@ describe("translateColumnDisplayName", () => {
       });
 
       it("should handle already-translated display names from backend", () => {
+        const germanAggregationPatterns = [
+          (v: string) => `Eindeutige Werte von ${v}`,
+        ];
+
         const result = translateColumnDisplayName(
           "Eindeutige Werte von People - Product → Created At: Monat",
           tcWithImplicitJoinTranslations,
+          germanAggregationPatterns,
         );
 
         expect(result).toBe(
