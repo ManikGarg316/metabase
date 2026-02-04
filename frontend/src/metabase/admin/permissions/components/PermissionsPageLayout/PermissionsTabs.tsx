@@ -1,5 +1,4 @@
 import cx from "classnames";
-import PropTypes from "prop-types";
 import { t } from "ttag";
 
 import { Radio } from "metabase/common/components/Radio";
@@ -10,18 +9,20 @@ import {
   PLUGIN_APPLICATION_PERMISSIONS,
 } from "metabase/plugins";
 
-const propTypes = {
-  tab: PropTypes.oneOf(["data", "collections"]).isRequired,
-  onChangeTab: PropTypes.func.isRequired,
-};
+import type { PermissionsPageTab } from "./PermissionsPageLayout";
 
-export const PermissionsTabs = ({ tab, onChangeTab }) => {
+interface PermissionsTabsProps {
+  tab: PermissionsPageTab;
+  onChangeTab: (tab: PermissionsPageTab) => void;
+}
+
+export const PermissionsTabs = ({ tab, onChangeTab }: PermissionsTabsProps) => {
   const isUsingTenants = useSetting("use-tenants");
 
   const adminPermissionsTabs = isUsingTenants
     ? PLUGIN_ADMIN_PERMISSIONS_TABS.tabs
     : PLUGIN_ADMIN_PERMISSIONS_TABS.tabs.filter(
-        (tab) => tab.value !== "tenant-collections",
+        (t) => t.value !== "tenant-collections",
       );
 
   return (
@@ -30,8 +31,8 @@ export const PermissionsTabs = ({ tab, onChangeTab }) => {
         colorScheme="accent7"
         value={tab}
         options={[
-          { name: t`Data`, value: `data` },
-          { name: t`Collections`, value: `collections` },
+          { name: t`Data`, value: "data" },
+          { name: t`Collections`, value: "collections" },
           ...adminPermissionsTabs,
           ...PLUGIN_APPLICATION_PERMISSIONS.tabs,
         ]}
@@ -41,5 +42,3 @@ export const PermissionsTabs = ({ tab, onChangeTab }) => {
     </div>
   );
 };
-
-PermissionsTabs.propTypes = propTypes;
