@@ -354,6 +354,7 @@ export const tokenFeatures = [
   "library",
   "support-users",
   "tenants",
+  "workspaces",
 ] as const;
 
 export type TokenFeature = (typeof tokenFeatures)[number];

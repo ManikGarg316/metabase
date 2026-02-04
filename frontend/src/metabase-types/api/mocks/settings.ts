@@ -143,6 +143,7 @@ export const createMockTokenFeatures = (
   library: false,
   "support-users": false,
   tenants: false,
+  workspaces: false,
   ...opts,
 });
 
