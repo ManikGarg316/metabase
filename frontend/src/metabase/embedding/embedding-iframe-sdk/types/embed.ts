@@ -74,6 +74,7 @@ export type DashboardEmbedOptions = StrictUnion<
   componentName: "metabase-dashboard";
 
   drills?: boolean;
+  autoRefreshInterval?: number;
   withTitle?: boolean;
   withDownloads?: boolean;
   withSubscriptions?: boolean;
@@ -95,6 +96,7 @@ export type QuestionEmbedOptions = StrictUnion<
   drills?: boolean;
   withTitle?: boolean;
   withDownloads?: boolean;
+  withAlerts?: boolean;
   targetCollection?: CollectionId;
   entityTypes?: EntityTypeFilterKeys[];
   isSaveEnabled?: boolean;
