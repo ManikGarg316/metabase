@@ -85,6 +85,7 @@ export const aliases: Record<string, (palette: ColorPalette) => string> = {
   "accent5-light": (palette) => tint(color(`accent5`, palette)),
   "accent6-light": (palette) => tint(color(`accent6`, palette)),
   "accent7-light": (palette) => tint(color(`accent7`, palette)),
+  "accent8-light": (palette) => tint(color(`accent8`, palette)),
 
   "accent0-dark": (palette) => shade(color(`accent0`, palette)),
   "accent1-dark": (palette) => shade(color(`accent1`, palette)),
@@ -94,6 +95,7 @@ export const aliases: Record<string, (palette: ColorPalette) => string> = {
   "accent5-dark": (palette) => shade(color(`accent5`, palette)),
   "accent6-dark": (palette) => shade(color(`accent6`, palette)),
   "accent7-dark": (palette) => shade(color(`accent7`, palette)),
+  "accent8-dark": (palette) => shade(color(`accent8`, palette)),
 };
 
 /**

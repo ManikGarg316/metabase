@@ -1,9 +1,7 @@
 import type { HTMLAttributes, Ref } from "react";
-import { forwardRef, useCallback } from "react";
-
-import { ColorPill } from "metabase/common/components/ColorPill";
-
+import { forwardRef } from "react";
 import { PopoverRoot } from "./ColorSelectorPopover.styled";
+import { ColorSelectorPanel } from "metabase/common/components/ColorSelectorPanel/ColorSelectorPanel";
 
 export interface ColorSelectorPopoverProps
   extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
@@ -17,24 +15,14 @@ const ColorSelectorPopover = forwardRef(function ColorSelector(
   { value, colors, onChange, onClose, ...props }: ColorSelectorPopoverProps,
   ref: Ref<HTMLDivElement>,
 ) {
-  const handleSelect = useCallback(
-    (newValue: string) => {
-      onChange?.(newValue);
-      onClose?.();
-    },
-    [onChange, onClose],
-  );
 
   return (
     <PopoverRoot {...props} ref={ref}>
-      {colors.map((option, index) => (
-        <ColorPill
-          key={index}
-          color={option}
-          isSelected={value === option}
-          onSelect={handleSelect}
-        />
-      ))}
+      <ColorSelectorPanel
+        initalColor={value}
+        onChange={onChange}
+        onClose={onClose}
+      />
     </PopoverRoot>
   );
 });

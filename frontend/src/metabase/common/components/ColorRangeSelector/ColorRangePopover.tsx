@@ -1,12 +1,10 @@
 import type { Ref } from "react";
 import { forwardRef, useCallback, useMemo, useState } from "react";
 import _ from "underscore";
+import { Stack, type StackProps } from "metabase/ui";
 
-import { ColorPill } from "metabase/common/components/ColorPill";
-import { Divider, Group, Stack, type StackProps } from "metabase/ui";
-
-import ColorRangeToggle from "./ColorRangeToggle";
-
+// import ColorRangeToggle from "./ColorRangeToggle";
+import { ColorRangeSelectorPanel } from "../ColorRangeSelectorPanel/ColorRangeSelectorPanel";
 export interface ColorRangeContentProps extends Omit<StackProps, "onChange"> {
   initialValue: string[];
   colors: string[];
@@ -21,7 +19,7 @@ const ColorSelectorContent = forwardRef(function ColorRangeSelector(
   {
     initialValue,
     colors,
-    colorRanges = [],
+    colorRanges,
     colorMapping: customColorMapping,
     isQuantile,
     onChange,
@@ -34,9 +32,10 @@ const ColorSelectorContent = forwardRef(function ColorRangeSelector(
     return customColorMapping ?? getDefaultColorMapping(colors);
   }, [colors, customColorMapping]);
 
-  const [isInverted, setIsInverted] = useState(() =>
-    getDefaultIsInverted(initialValue, colorMapping),
-  );
+  const isInverted = false;
+  // const [isInverted, setIsInverted] = useState(() =>
+  //   getDefaultIsInverted(initialValue, colorMapping),
+  // );
 
   const [color, setColor] = useState(() =>
     getDefaultColor(initialValue, colors, colorMapping),
@@ -48,16 +47,16 @@ const ColorSelectorContent = forwardRef(function ColorRangeSelector(
       : getColorRange(color, colorMapping, isInverted),
   );
 
-  const handleColorSelect = useCallback(
-    (newColor: string) => {
-      const newValue = getColorRange(newColor, colorMapping, isInverted);
+  // const handleColorSelect = useCallback(
+  //   (newColor: string) => {
+  //     const newValue = getColorRange(newColor, colorMapping, isInverted);
 
-      setColor(newColor);
-      setValue(newValue);
-      onChange?.(newValue);
-    },
-    [colorMapping, isInverted, onChange],
-  );
+  //     setColor(newColor);
+  //     setValue(newValue);
+  //     onChange?.(newValue);
+  //   },
+  //   [colorMapping, isInverted, onChange],
+  // );
 
   const handleColorRangeSelect = useCallback(
     (newColorRange: string[]) => {
@@ -72,39 +71,33 @@ const ColorSelectorContent = forwardRef(function ColorRangeSelector(
     [isInverted, onChange],
   );
 
-  const handleToggleInvertedClick = useCallback(() => {
-    const newValue =
-      color === ""
-        ? [...value].reverse()
-        : getColorRange(color, colorMapping, !isInverted);
+  // const handleToggleInvertedClick = useCallback(() => {
+  //   const newValue =
+  //     color === ""
+  //       ? [...value].reverse()
+  //       : getColorRange(color, colorMapping, !isInverted);
 
-    setIsInverted(!isInverted);
-    setValue(newValue);
-    onChange?.(newValue);
-  }, [color, value, colorMapping, isInverted, onChange]);
+  //   setIsInverted(!isInverted);
+  //   setValue(newValue);
+  //   onChange?.(newValue);
+  // }, [color, value, colorMapping, isInverted, onChange]);
 
   return (
     <Stack py="md" gap="md" {...props} ref={ref}>
-      <Group px="md" gap="xs" justify="center">
-        {colors.map((value, index) => (
-          <ColorPill
-            key={index}
-            color={value}
-            isSelected={value === color}
-            onSelect={handleColorSelect}
-          />
-        ))}
-      </Group>
-      <ColorRangeToggle
+      <ColorRangeSelectorPanel
+      initialValue={value} 
+      onChange={handleColorRangeSelect}
+      onClose={onClose}/>
+      {/* <ColorRangeToggle
         px="md"
         justify="center"
         value={value}
         isQuantile={isQuantile}
         onToggleClick={handleToggleInvertedClick}
         showToggleButton
-      />
-      {colorRanges.length > 0 && <Divider />}
-      <Stack px="md">
+      /> */}
+      {/* {colorRanges.length > 0 && <Divider />} */}
+      {/* <Stack px="md">
         {colorRanges?.map((range, index) => (
           <ColorRangeToggle
             key={index}
@@ -114,7 +107,7 @@ const ColorSelectorContent = forwardRef(function ColorRangeSelector(
             onColorRangeSelect={handleColorRangeSelect}
           />
         ))}
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 });
@@ -151,14 +144,14 @@ const getDefaultColorMapping = (colors: string[]) => {
   return Object.fromEntries(colors.map((color) => [color, ["white", color]]));
 };
 
-const getDefaultIsInverted = (
-  value: string[],
-  colorMapping: Record<string, string[]>,
-) => {
-  return Object.values(colorMapping).some((range) => {
-    return _.isEqual(value, [...range].reverse());
-  });
-};
+// const getDefaultIsInverted = (
+//   value: string[],
+//   colorMapping: Record<string, string[]>,
+// ) => {
+//   return Object.values(colorMapping).some((range) => {
+//     return _.isEqual(value, [...range].reverse());
+//   });
+// };
 
 // eslint-disable-next-line import/no-default-export -- deprecated usage
 export default ColorSelectorContent;
