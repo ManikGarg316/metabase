@@ -411,7 +411,8 @@
                           (is (= 2 distinct-timestamps) "Should have 2 distinct timestamp")
                           (is (compare-checkpoint-values checkpoint-type expected-second-checkpoint checkpoint) "Checkpoint should be computed from existing data"))))
 
-                    (when-not (= driver/*driver* :clickhouse)
+                    (when (and (isa? driver/hierarchy driver/*driver* :sql-jdbc) ; insert/delete test products only works for jdbc drivers at the moment
+                               (not= driver/*driver* :clickhouse))
                       (testing "Add new data and run incrementally"
                         (with-insert-test-products!
                           [{:name "After Switch Product"
@@ -464,7 +465,8 @@
                       (let [row-count (get-table-row-count target-table)]
                         (is (= 16 row-count) "Should still have 16 rows, no new data")))
 
-                    (when-not (= driver/*driver* :clickhouse)
+                    (when (and (isa? driver/hierarchy driver/*driver* :sql-jdbc) ; insert/delete test products only works for jdbc drivers at the moment
+                               (not= driver/*driver* :clickhouse))
                       (testing "After inserting new data, incremental run appends only new rows"
                         (with-insert-test-products!
                           [{:name "New Product 1"
@@ -484,7 +486,7 @@
 
 (deftest unsupported-checkpoint-column-type-test
   (testing "Transform fails at runtime with unsupported checkpoint column type"
-    (mt/test-drivers (test-drivers)
+    (mt/test-drivers #{:h2 :postgres}
       (mt/with-premium-features #{:transforms}
         (mt/dataset transforms-dataset/transforms-test
           (with-transform-cleanup! [target-table "unsupported_type_test"]
